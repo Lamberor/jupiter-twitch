@@ -17,12 +17,18 @@ import java.util.Map;
 public class FavoriteServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String userId = request.getParameter("user_id");
-
+        // Check if the session is still valid,
+        // which means the user has been logged in successfully
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+           response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+           return;
+        }
+        String userId = (String) session.getAttribute("user_id");
 
         try (MySQLConnection conn = new MySQLConnection()) {
             Map<String, List<Item>> itemMap = conn.getFavoriteItems(userId);
-            ServletUtil.writeItemMap(response, itemMap);
+            ServletUtil.writeData(response, itemMap);
         } catch (MySQLException e) {
             throw new ServletException(e);
         }
@@ -30,9 +36,12 @@ public class FavoriteServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Get user ID from request URL, this is a temporary solution
-        // since we don’t support session now
-        String userId = request.getParameter("user_id");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        String userId = (String) session.getAttribute("user_id");
 
         // Get favorite item information from request body
         ObjectMapper mapper = new ObjectMapper();
@@ -54,7 +63,13 @@ public class FavoriteServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String userId = request.getParameter("user_id");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        String userId = (String) session.getAttribute("user_id");
+
         ObjectMapper mapper = new ObjectMapper();
         FavoriteRequestBody body = mapper.readValue(request.getReader(), FavoriteRequestBody.class);
         if (body == null) {
