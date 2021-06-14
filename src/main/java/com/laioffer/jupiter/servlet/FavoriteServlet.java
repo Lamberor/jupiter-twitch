@@ -5,6 +5,7 @@ import com.laioffer.jupiter.db.MySQLConnection;
 import com.laioffer.jupiter.db.MySQLException;
 import com.laioffer.jupiter.entity.FavoriteRequestBody;
 import com.laioffer.jupiter.entity.Item;
+import com.laioffer.jupiter.entity.LoginRequestBody;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -44,9 +45,9 @@ public class FavoriteServlet extends HttpServlet {
         String userId = (String) session.getAttribute("user_id");
 
         // Get favorite item information from request body
-        ObjectMapper mapper = new ObjectMapper();
-        FavoriteRequestBody body = mapper.readValue(
-                request.getReader(), FavoriteRequestBody.class);
+        FavoriteRequestBody body = ServletUtil.readRequestBody(
+                FavoriteRequestBody.class, request
+        );
         if (body == null) {
             System.err.println("Failed to convert JSON to FavoriteRequestBody.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -70,8 +71,9 @@ public class FavoriteServlet extends HttpServlet {
         }
         String userId = (String) session.getAttribute("user_id");
 
-        ObjectMapper mapper = new ObjectMapper();
-        FavoriteRequestBody body = mapper.readValue(request.getReader(), FavoriteRequestBody.class);
+        FavoriteRequestBody body = ServletUtil.readRequestBody(
+                FavoriteRequestBody.class, request
+        );
         if (body == null) {
             System.err.println("Failed to convert JSON to FavoriteRequestBody.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

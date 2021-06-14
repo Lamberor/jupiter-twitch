@@ -3,6 +3,7 @@ package com.laioffer.jupiter.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.laioffer.jupiter.db.MySQLConnection;
 import com.laioffer.jupiter.db.MySQLException;
+import com.laioffer.jupiter.entity.LoginRequestBody;
 import com.laioffer.jupiter.entity.User;
 
 import javax.servlet.*;
@@ -20,8 +21,9 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Read user data from the request body
-        ObjectMapper mapper = new ObjectMapper();
-        User user = mapper.readValue(request.getReader(), User.class);
+        User user = ServletUtil.readRequestBody(
+                User.class, request
+        );
         if (user == null) {
             System.err.println("User information incorrect.");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
