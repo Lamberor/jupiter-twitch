@@ -19,8 +19,14 @@ import java.net.URLEncoder;
 import java.util.*;
 
 public class TwitchClient {
-    private static final String TOKEN = "Bearer h0jsyhpps4q3xd5evhn15xbw7zq1in";
-    private static final String CLIENT_ID = "dxjuhqplffqdde1jp4xp7558b2qaqe";
+    // Get token and clientID from config
+    String propFileName = "config.properties";
+    static Properties prop = new Properties();
+    static String token = prop.getProperty("token");
+    static String client = prop.getProperty("client");
+
+    private static final String TOKEN = token;
+    private static final String CLIENT_ID = client;
     private static final String TOP_GAME_URL = "https://api.twitch.tv/helix/games/top?first=%s";
     private static final String GAME_SEARCH_URL_TEMPLATE = "https://api.twitch.tv/helix/games?name=%s";
     private static final int DEFAULT_GAME_LIMIT = 20;
