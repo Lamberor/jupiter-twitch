@@ -20,8 +20,8 @@ import java.util.*;
 
 public class TwitchClient {
     // Get token and clientID from config
-    String propFileName = "config.properties";
     static Properties prop = new Properties();
+    String propFileName = "config.properties";
     static String token = prop.getProperty("token");
     static String client = prop.getProperty("client");
 
